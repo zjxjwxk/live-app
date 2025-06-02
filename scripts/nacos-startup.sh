@@ -1,0 +1,1 @@
+sudo sh /Library/nacos-2.2.0.1/bin/startup.sh -m standalone
