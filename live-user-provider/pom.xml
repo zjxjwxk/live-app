@@ -20,6 +20,7 @@
         <rocketmq.client.version>4.8.0</rocketmq.client.version>
         <spring-cloud-alibaba.version>2022.0.0.0-RC1</spring-cloud-alibaba.version>
         <lombok.version>1.18.38</lombok.version>
+        <commons.version>1.9</commons.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.compilerVersion>17</maven.compiler.compilerVersion>
@@ -80,6 +81,11 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>${commons.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -4,6 +4,10 @@ spring:
   datasource:
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
     url: jdbc:shardingsphere:classpath:db-sharding.yaml
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:8808/live_user?useUnicode=true&characterEncoding=utf8
+#    username: root
+#    password: 19981018
     hikari:
       pool-name: live-user-pool
       minimum-idle: 150
