@@ -10,6 +10,8 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * 用户中台 Dubbo 服务提供者
  *
@@ -31,23 +33,49 @@ public class UserProviderApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws Exception {
         long userId = 10001L;
 
-        System.out.println("======开始设置标签======");
-        System.out.println(userTagService.setTag(userId, UserTagsEnum.IS_RICH));
-        System.out.println("当前用户是否拥有IS_RICH标签: " + userTagService.containTag(userId, UserTagsEnum.IS_RICH));
-        System.out.println(userTagService.setTag(userId, UserTagsEnum.IS_VIP));
-        System.out.println("当前用户是否拥有IS_VIP标签: " + userTagService.containTag(userId, UserTagsEnum.IS_VIP));
-        System.out.println(userTagService.setTag(userId, UserTagsEnum.IS_OLD_USER));
-        System.out.println("当前用户是否拥有IS_OLD_USER标签: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
+//        // 测试设置标签
+//        System.out.println("======开始设置标签======");
+//        System.out.println(userTagService.setTag(userId, UserTagsEnum.IS_RICH));
+//        System.out.println("当前用户是否拥有IS_RICH标签: " + userTagService.containTag(userId, UserTagsEnum.IS_RICH));
+//        System.out.println(userTagService.setTag(userId, UserTagsEnum.IS_VIP));
+//        System.out.println("当前用户是否拥有IS_VIP标签: " + userTagService.containTag(userId, UserTagsEnum.IS_VIP));
+//        System.out.println(userTagService.setTag(userId, UserTagsEnum.IS_OLD_USER));
+//        System.out.println("当前用户是否拥有IS_OLD_USER标签: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
+//
+//        // 测试删除标签
+//        System.out.println("======开始删除标签======");
+//        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_RICH));
+//        System.out.println("当前用户是否拥有IS_RICH标签: " + userTagService.containTag(userId, UserTagsEnum.IS_RICH));
+//        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_VIP));
+//        System.out.println("当前用户是否拥有IS_VIP标签: " + userTagService.containTag(userId, UserTagsEnum.IS_VIP));
+//        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_OLD_USER));
+//        System.out.println("当前用户是否拥有IS_OLD_USER标签: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
+//
+//        // 测试设置标签失败
+//        System.out.println(userTagService.setTag(userId, UserTagsEnum.IS_VIP));
+//        System.out.println(userTagService.setTag(userId, UserTagsEnum.IS_VIP));
+//
+//        // 测试删除标签失败
+//        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_VIP));
+//        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_VIP));
 
-        System.out.println("======开始删除标签======");
-        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_RICH));
-        System.out.println("当前用户是否拥有IS_RICH标签: " + userTagService.containTag(userId, UserTagsEnum.IS_RICH));
-        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_VIP));
-        System.out.println("当前用户是否拥有IS_VIP标签: " + userTagService.containTag(userId, UserTagsEnum.IS_VIP));
-        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_OLD_USER));
-        System.out.println("当前用户是否拥有IS_OLD_USER标签: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
+        // 测试并发设置标签
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        for (int i = 0; i < 100; ++i) {
+            Thread thread = new Thread(() -> {
+                try {
+                    countDownLatch.await();
+                    System.out.println("Set Result is " + userTagService.setTag(userId, UserTagsEnum.IS_VIP));
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            thread.start();
+        }
+        countDownLatch.countDown();
+        Thread.sleep(100000);
     }
 }

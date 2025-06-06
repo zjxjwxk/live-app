@@ -12,9 +12,9 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface IUserTagMapper extends BaseMapper<UserTagPO> {
 
-    @Update("UPDATE t_user_tag SET ${fieldName} = ${fieldName} | #{tag} WHERE user_id = #{userId}")
+    @Update("UPDATE t_user_tag SET ${fieldName} = ${fieldName} | #{tag} WHERE user_id = #{userId} and ${fieldName} & #{tag} = 0")
     int setTag(Long userId, String fieldName, long tag);
 
-    @Update("UPDATE t_user_tag SET ${fieldName} = ${fieldName} & ~#{tag} WHERE user_id = #{userId}")
+    @Update("UPDATE t_user_tag SET ${fieldName} = ${fieldName} & ~#{tag} WHERE user_id = #{userId} and ${fieldName} & #{tag} = #{tag}")
     int cancelTag(Long userId, String fieldName, long tag);
 }
