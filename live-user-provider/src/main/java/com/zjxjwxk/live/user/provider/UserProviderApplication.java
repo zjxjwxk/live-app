@@ -1,6 +1,8 @@
 package com.zjxjwxk.live.user.provider;
 
 import com.zjxjwxk.live.user.constants.UserTagsEnum;
+import com.zjxjwxk.live.user.dto.UserDTO;
+import com.zjxjwxk.live.user.provider.service.IUserService;
 import com.zjxjwxk.live.user.provider.service.IUserTagService;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
@@ -25,6 +27,8 @@ public class UserProviderApplication implements CommandLineRunner {
 
     @Resource
     private IUserTagService userTagService;
+    @Resource
+    private IUserService userService;
 
     public static void main(String[] args) {
         SpringApplication springBootApplication = new SpringApplication(UserProviderApplication.class);
@@ -62,20 +66,32 @@ public class UserProviderApplication implements CommandLineRunner {
 //        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_VIP));
 //        System.out.println(userTagService.cancelTag(userId, UserTagsEnum.IS_VIP));
 
-        // 测试并发设置标签
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        for (int i = 0; i < 100; ++i) {
-            Thread thread = new Thread(() -> {
-                try {
-                    countDownLatch.await();
-                    System.out.println("Set Result is " + userTagService.setTag(userId, UserTagsEnum.IS_VIP));
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            thread.start();
-        }
-        countDownLatch.countDown();
-        Thread.sleep(100000);
+//        // 测试并发设置标签
+//        CountDownLatch countDownLatch = new CountDownLatch(1);
+//        for (int i = 0; i < 100; ++i) {
+//            Thread thread = new Thread(() -> {
+//                try {
+//                    countDownLatch.await();
+//                    System.out.println("Set Result is " + userTagService.setTag(userId, UserTagsEnum.IS_VIP));
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//            thread.start();
+//        }
+//        countDownLatch.countDown();
+//        Thread.sleep(100000);
+
+        // 测试用户信息延迟双删
+        UserDTO userDTO = userService.getByUserId(userId);
+        userDTO.setNickName("zjxjwxk1998");
+        userService.updateUserInfo(userDTO);
+
+        // 测试用户标签延迟双删
+        System.out.println("IS_OLD_USER: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
+        System.out.println("Set Tag IS_OLD_USER: " + userTagService.setTag(userId, UserTagsEnum.IS_OLD_USER));
+        System.out.println("IS_OLD_USER: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
+        System.out.println("Cancel Tag IS_OLD_USER: " + userTagService.cancelTag(userId, UserTagsEnum.IS_OLD_USER));
+        System.out.println("IS_OLD_USER: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
     }
 }

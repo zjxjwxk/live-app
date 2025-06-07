@@ -2,7 +2,8 @@ package com.zjxjwxk.live.user.provider.config;
 
 import com.alibaba.fastjson2.JSON;
 import com.zjxjwxk.live.framework.redis.starter.key.UserProviderCacheKeyBuilder;
-import com.zjxjwxk.live.user.dto.UserDTO;
+import com.zjxjwxk.live.user.dto.UserCacheDeleteAsyncDTO;
+import com.zjxjwxk.live.user.constants.UserCacheDeleteAsyncCode;
 import com.zjxjwxk.live.user.provider.constants.RocketMQTopic;
 import jakarta.annotation.Resource;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -46,20 +47,31 @@ public class RocketMQConsumerConfig implements InitializingBean {
             defaultMQPushConsumer.setConsumerGroup(rocketMQConsumerProperties.getGroupName());
             defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
             defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
-            defaultMQPushConsumer.subscribe(RocketMQTopic.USER_UPDATE_CACHE, "*");
+            defaultMQPushConsumer.subscribe(RocketMQTopic.DELETE_USER_CACHE_ASYNC, "*");
 
             defaultMQPushConsumer.setMessageListener((MessageListenerConcurrently) (msgs, context) -> {
-                String msgStr = new String(msgs.get(0).getBody());
-                UserDTO userDTO = JSON.parseObject(msgStr, UserDTO.class);
+                String json = new String(msgs.get(0).getBody());
+                UserCacheDeleteAsyncDTO userCacheDeleteAsyncDTO = JSON.parseObject(json, UserCacheDeleteAsyncDTO.class);
 
-                if (userDTO == null || userDTO.getUserId() == null) {
-                    LOGGER.error("MQ消费者：接受消息中UserId为空，参数异常，消息内容：{}", msgStr);
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                // 延迟删除用户信息
+                if (UserCacheDeleteAsyncCode.USER_INFO.getCode() == userCacheDeleteAsyncDTO.getCode()) {
+                    Long userId = JSON.parseObject(userCacheDeleteAsyncDTO.getJson()).getLong("userId");
+                    if (userId == null) {
+                        LOGGER.error("MQ消费者：收到的消息体中UserId为空，参数异常，消息内容：{}", json);
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }
+                    redisTemplate.delete(userProviderCacheKeyBuilder.buildUserInfoKey(userId));
+                    LOGGER.info("延迟删除用户信息缓存完成，userId is {}", userId);
+                } else if (UserCacheDeleteAsyncCode.USER_TAG.getCode() == userCacheDeleteAsyncDTO.getCode()) {
+                    // 延迟删除用户标签
+                    Long userId = JSON.parseObject(userCacheDeleteAsyncDTO.getJson()).getLong("userId");
+                    if (userId == null) {
+                        LOGGER.error("MQ消费者：收到的消息体中UserId为空，参数异常，消息内容：{}", json);
+                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    }
+                    redisTemplate.delete(userProviderCacheKeyBuilder.buildTagInfoKey(userId));
+                    LOGGER.info("延迟删除用户标签缓存完成，userId is {}", userId);
                 }
-
-                String redisKey = userProviderCacheKeyBuilder.buildUserInfoKey(userDTO.getUserId());
-                redisTemplate.delete(redisKey);
-                LOGGER.info("延迟删除处理完成，userDTO is {}", userDTO);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             });
 

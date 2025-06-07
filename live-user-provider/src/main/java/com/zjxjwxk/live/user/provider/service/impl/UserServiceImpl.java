@@ -3,6 +3,8 @@ package com.zjxjwxk.live.user.provider.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.zjxjwxk.live.common.interfaces.ConvertBeanUtils;
 import com.zjxjwxk.live.framework.redis.starter.key.UserProviderCacheKeyBuilder;
+import com.zjxjwxk.live.user.constants.UserCacheDeleteAsyncCode;
+import com.zjxjwxk.live.user.dto.UserCacheDeleteAsyncDTO;
 import com.zjxjwxk.live.user.dto.UserDTO;
 import com.zjxjwxk.live.user.provider.constants.RocketMQTopic;
 import com.zjxjwxk.live.user.provider.dao.mapper.IUserMapper;
@@ -76,10 +78,18 @@ public class UserServiceImpl implements IUserService {
         String redisKey = userProviderCacheKeyBuilder.buildUserInfoKey(userDTO.getUserId());
         redisTemplate.delete(redisKey);
 
+        // 利用RocketMQ作延迟双删
+        Map<String, Object> jsonParam = new HashMap<>();
+        jsonParam.put("userId", userDTO.getUserId());
+
+        UserCacheDeleteAsyncDTO userCacheDeleteAsyncDTO = new UserCacheDeleteAsyncDTO();
+        userCacheDeleteAsyncDTO.setCode(UserCacheDeleteAsyncCode.USER_INFO.getCode());
+        userCacheDeleteAsyncDTO.setJson(JSON.toJSONString(jsonParam));
+
         Message message = new Message();
-        message.setBody(JSON.toJSONString(userDTO).getBytes());
-        message.setTopic(RocketMQTopic.USER_UPDATE_CACHE);
-        // 延迟1秒发送（延迟双删）
+        message.setTopic(RocketMQTopic.DELETE_USER_CACHE_ASYNC);
+        message.setBody(JSON.toJSONString(userCacheDeleteAsyncDTO).getBytes());
+        // 延迟1秒发送
         message.setDelayTimeLevel(1);
         try {
             mqProducer.send(message);

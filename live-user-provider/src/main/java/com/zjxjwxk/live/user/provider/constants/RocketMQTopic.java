@@ -8,5 +8,8 @@ package com.zjxjwxk.live.user.provider.constants;
  */
 public interface RocketMQTopic {
 
-    String USER_UPDATE_CACHE = "user-update-cache";
+    /**
+     * 异步删除用户相关缓存（用于更新后延迟双删）
+     */
+    String DELETE_USER_CACHE_ASYNC = "delete-user-cache";
 }

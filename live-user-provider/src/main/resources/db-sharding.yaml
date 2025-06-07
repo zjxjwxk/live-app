@@ -41,7 +41,7 @@ rules:
       t_user-inline:
         type: INLINE
         props:
-          algorithm-expression: t_user_${(user_id % 100).toString().padLeft(2,'0')}\
+          algorithm-expression: t_user_${(user_id % 100).toString().padLeft(2,'0')}
       t_user_tag-inline:
         type: INLINE
         props:
