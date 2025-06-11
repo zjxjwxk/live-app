@@ -38,7 +38,7 @@ public class UserProviderApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        long userId = 10001L;
+//        long userId = 10001L;
 
 //        // 测试设置标签
 //        System.out.println("======开始设置标签======");
@@ -82,16 +82,16 @@ public class UserProviderApplication implements CommandLineRunner {
 //        countDownLatch.countDown();
 //        Thread.sleep(100000);
 
-        // 测试用户信息延迟双删
-        UserDTO userDTO = userService.getByUserId(userId);
-        userDTO.setNickName("zjxjwxk1998");
-        userService.updateUserInfo(userDTO);
-
-        // 测试用户标签延迟双删
-        System.out.println("IS_OLD_USER: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
-        System.out.println("Set Tag IS_OLD_USER: " + userTagService.setTag(userId, UserTagsEnum.IS_OLD_USER));
-        System.out.println("IS_OLD_USER: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
-        System.out.println("Cancel Tag IS_OLD_USER: " + userTagService.cancelTag(userId, UserTagsEnum.IS_OLD_USER));
-        System.out.println("IS_OLD_USER: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
+//        // 测试用户信息延迟双删
+//        UserDTO userDTO = userService.getByUserId(userId);
+//        userDTO.setNickName("zjxjwxk1998");
+//        userService.updateUserInfo(userDTO);
+//
+//        // 测试用户标签延迟双删
+//        System.out.println("IS_OLD_USER: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
+//        System.out.println("Set Tag IS_OLD_USER: " + userTagService.setTag(userId, UserTagsEnum.IS_OLD_USER));
+//        System.out.println("IS_OLD_USER: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
+//        System.out.println("Cancel Tag IS_OLD_USER: " + userTagService.cancelTag(userId, UserTagsEnum.IS_OLD_USER));
+//        System.out.println("IS_OLD_USER: " + userTagService.containTag(userId, UserTagsEnum.IS_OLD_USER));
     }
 }

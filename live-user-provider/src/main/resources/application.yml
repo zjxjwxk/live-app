@@ -5,7 +5,7 @@ spring:
     driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
     url: jdbc:shardingsphere:classpath:db-sharding.yaml
 #    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:8808/live_user?useUnicode=true&characterEncoding=utf8
+#    url: jdbc:mysql://192.168.10.109:8808/live_user?useUnicode=true&characterEncoding=utf8
 #    username: root
 #    password: 19981018
     hikari:
@@ -18,7 +18,7 @@ spring:
   data:
     redis:
       port: 6379
-      host: 127.0.0.1
+      host: 192.168.10.109
       lettuce:
         pool:
           min-idle: 10
@@ -29,17 +29,17 @@ dubbo:
   application:
     name: ${spring.application.name}
   registry:
-    address: nacos://127.0.0.1:8848?username=nacos&&password=nacos
+    address: nacos://192.168.10.109:8848?username=nacos&&password=nacos
   protocol:
     name: dubbo
     port: 9091
 
 rocketmq:
   producer:
-    name-srv-addr: 127.0.0.1:9876
+    name-srv-addr: 192.168.10.109:9876
     group-name: ${spring.application.name}
     retry-times: 3
     send-timeout: 3000
   consumer:
-    name-srv-addr: 127.0.0.1:9876
+    name-srv-addr: 192.168.10.109:9876
     group-name: ${spring.application.name}

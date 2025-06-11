@@ -10,7 +10,7 @@ import org.apache.dubbo.config.*;
  */
 public class DubboTest {
 
-    private static final String REGISTER_ADDRESS = "nacos://127.0.0.1:8848?username=nacos&&password=nacos";
+    private static final String REGISTER_ADDRESS = "nacos://192.168.10.109:8848?username=nacos&&password=nacos";
     private static RegistryConfig registryConfig;
     private static ApplicationConfig applicationConfig;
     private IUserRpc userRpc;
@@ -51,13 +51,13 @@ public class DubboTest {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        initConfig();
-        DubboTest dubboTest = new DubboTest();
-        dubboTest.initProvider();
-        dubboTest.initConsumer();
-        while (true) {
-            dubboTest.userRpc.test();
-            Thread.sleep(3000);
-        }
+//        initConfig();
+//        DubboTest dubboTest = new DubboTest();
+//        dubboTest.initProvider();
+//        dubboTest.initConsumer();
+//        while (true) {
+//            dubboTest.userRpc.test();
+//            Thread.sleep(3000);
+//        }
     }
 }
