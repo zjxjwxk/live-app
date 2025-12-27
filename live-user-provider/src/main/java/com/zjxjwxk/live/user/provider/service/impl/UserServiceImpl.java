@@ -113,8 +113,8 @@ public class UserServiceImpl implements IUserService {
         if (CollectionUtils.isEmpty(userIdList)) {
             return new HashMap<>();
         }
-        // 过滤掉userId <= 10000的数据
-        userIdList = userIdList.stream().filter(userId -> userId > 10000).toList();
+        // 过滤掉userId < 10000的数据
+        userIdList = userIdList.stream().filter(userId -> userId >= 10000).toList();
         if (CollectionUtils.isEmpty(userIdList)) {
             return new HashMap<>();
         }
