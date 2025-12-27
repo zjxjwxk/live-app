@@ -1,3 +1,0 @@
-docker run --name=mysql-master-1 --privileged=true -p 8808:3306 -v /var/lib/mysql/master1/data/:/var/lib/mysql -v /var/lib/mysql/master1/conf/my.cnf:/etc/mysql/my.cnf -v /var/lib/mysql/master1/mysql-files/:/var/lib/mysql-files/ -e MYSQL_ROOT_PASSWORD=19981018 -d mysql:8.0 --lower_case_table_names=1
-
-docker run --name=mysql-slave-1 --privileged=true -p 8809:3306 -v /var/lib/mysql/slave1/data/:/var/lib/mysql -v /var/lib/mysql/slave1/conf/my.cnf:/etc/mysql/my.cnf -v /var/lib/mysql/slave1/mysql-files/:/var/lib/mysql-files/ -e MYSQL_ROOT_PASSWORD=19981018 -d mysql:8.0 --lower_case_table_names=1
