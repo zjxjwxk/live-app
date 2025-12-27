@@ -10,6 +10,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 
 /**
+ * 初始化数据库连接池时，提前建立连接
+ *
  * @author Xinkang Wu
  * @date 2025/4/20 17:12
  */
