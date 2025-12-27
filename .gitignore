@@ -34,3 +34,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+scripts/logs
+scripts/*.log
+scripts/*.out
