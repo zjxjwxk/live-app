@@ -1,7 +1,7 @@
 package com.zjxjwxk.live.user.provider.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.zjxjwxk.live.common.interfaces.ConvertBeanUtils;
+import com.zjxjwxk.live.common.interfaces.utils.ConvertBeanUtils;
 import com.zjxjwxk.live.framework.redis.starter.key.UserProviderCacheKeyBuilder;
 import com.zjxjwxk.live.user.constants.UserCacheDeleteAsyncCode;
 import com.zjxjwxk.live.user.dto.UserCacheDeleteAsyncDTO;
