@@ -27,19 +27,27 @@ public class RedisKeyLoadMatch implements Condition {
             return false;
         }
         try {
+            // 获取当前 CacheKeyBuilder 类名称
             Field classNameField = metadata.getClass().getDeclaredField("className");
             classNameField.setAccessible(true);
-            String keyBuilderName = (String) classNameField.get(metadata);
-            List<String> splitList = Arrays.asList(keyBuilderName.split("\\."));
-            // 忽略大小写，统一用live开头命名
-            String classSimplyName = PREFIX + splitList.get(splitList.size() - 1).toLowerCase();
-            boolean matchStatus = classSimplyName.contains(appName.replaceAll("-", ""));
-            LOGGER.info("keyBuilderClass is {}, matchStatus is {}", keyBuilderName, matchStatus);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
+            String keyBuilderClassFullName = (String) classNameField.get(metadata);
+            boolean matchStatus = isMatchStatus(keyBuilderClassFullName, appName);
+
+            LOGGER.info("keyBuilderClass is {}, matchStatus is {}", keyBuilderClassFullName, matchStatus);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
         return true;
+    }
+
+    private static boolean isMatchStatus(String keyBuilderClassFullName, String appName) {
+        List<String> splitList = Arrays.asList(keyBuilderClassFullName.split("\\."));
+        String keyBuilderClassName = splitList.get(splitList.size() - 1).toLowerCase();
+
+        // 统一用 live 开头命名，如 live + UserProviderCacheKeyBuilder
+        String keyBuilderClassNameWithPrefix = PREFIX + keyBuilderClassName;
+
+        // 判断当前 CacheKeyBuilder 名称是否包含当前应用名称，如 liveUserProviderCacheKeyBuilder 包含 liveUserProvider
+        return keyBuilderClassNameWithPrefix.contains(appName.replaceAll("-", ""));
     }
 }
