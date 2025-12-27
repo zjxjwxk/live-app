@@ -4,6 +4,7 @@ import com.zjxjwxk.live.user.dto.UserDTO;
 import com.zjxjwxk.live.user.interfaces.IUserRpc;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,7 @@ public class UserController {
         return userRpc.batchQueryUserInfo(Arrays.stream(userIdStr.split(",")).map(Long::valueOf).toList());
     }
 
-    @GetMapping("/updateUserInfo")
+    @PostMapping("/updateUserInfo")
     public boolean updateUserInfo(Long userId, String nickname) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(userId);
@@ -39,7 +40,7 @@ public class UserController {
         return userRpc.updateUserInfo(userDTO);
     }
 
-    @GetMapping("/insertOne")
+    @PostMapping("/insertOne")
     public boolean insertOne(Long userId) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(userId);
