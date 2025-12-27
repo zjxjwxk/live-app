@@ -1,8 +1,11 @@
 package dubbo;
 
+import com.zjxjwxk.live.user.dto.UserDTO;
 import com.zjxjwxk.live.user.interfaces.IUserRpc;
 import com.zjxjwxk.live.user.provider.rpc.UserRpcImpl;
 import org.apache.dubbo.config.*;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Xinkang Wu
@@ -10,7 +13,7 @@ import org.apache.dubbo.config.*;
  */
 public class DubboTest {
 
-    private static final String REGISTER_ADDRESS = "nacos://192.168.10.109:8848?username=nacos&&password=nacos";
+    private static final String REGISTER_ADDRESS = "nacos://127.0.0.1:8848?username=nacos&&password=nacos";
     private static RegistryConfig registryConfig;
     private static ApplicationConfig applicationConfig;
     private IUserRpc userRpc;
@@ -59,5 +62,12 @@ public class DubboTest {
 //            dubboTest.userRpc.test();
 //            Thread.sleep(3000);
 //        }
+        initConfig();
+        DubboTest dubboTest = new DubboTest();
+        dubboTest.initProvider();
+        dubboTest.initConsumer();
+        UserDTO userDTO = dubboTest.userRpc.getByUserId(10000L);
+        System.out.println(userDTO);
+        assertNotNull(userDTO);
     }
 }

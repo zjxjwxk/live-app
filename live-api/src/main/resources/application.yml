@@ -2,4 +2,4 @@ dubbo:
   application:
     name: live-api
   registry:
-    address: nacos://192.168.10.109:8848?username=nacos&&password=nacos
+    address: nacos://127.0.0.1:8848?username=nacos&&password=nacos
