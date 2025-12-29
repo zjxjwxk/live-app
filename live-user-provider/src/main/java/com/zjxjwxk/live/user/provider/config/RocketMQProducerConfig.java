@@ -36,7 +36,7 @@ public class RocketMQProducerConfig {
                 new ArrayBlockingQueue<>(1000), r -> {
             Thread thread = new Thread(r);
             thread.setName(applicationName + ":rocketmq-producer:" + ThreadLocalRandom.current().nextInt(1000));
-            return null;
+            return thread;
         });
 
         DefaultMQProducer defaultMQProducer = new DefaultMQProducer();
