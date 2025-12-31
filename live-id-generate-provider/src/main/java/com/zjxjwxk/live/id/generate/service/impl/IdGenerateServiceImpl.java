@@ -114,7 +114,7 @@ public class IdGenerateServiceImpl implements IdGenerateService, InitializingBea
         for (IdGeneratePO idGeneratePO : idGeneratePOList) {
             LOGGER.info("IdGenerateService初始化占用新的id段");
             // 尝试占用id段，并存入本地内存Map
-            tryUpdateIdGenerate(idGeneratePO);
+            updateIdGenerate(idGeneratePO.getId());
             // 为该id生成策略初始化信号量
             SEMAPHORE_MAP.put(idGeneratePO.getId(), new Semaphore(1));
         }
@@ -140,8 +140,7 @@ public class IdGenerateServiceImpl implements IdGenerateService, InitializingBea
                 LOGGER.info("开始异步刷新本地有序id段");
                 THREAD_POOL_EXECUTOR.execute(() -> {
                     try {
-                        IdGeneratePO idGeneratePO = idGenerateMapper.selectById(localSeqIdBO.getId());
-                        tryUpdateIdGenerate(idGeneratePO);
+                        updateIdGenerate(localSeqIdBO.getId());
                     } catch (Exception e) {
                         LOGGER.error("[refreshLocalSeqId] error is ", e);
                     } finally {
@@ -175,8 +174,7 @@ public class IdGenerateServiceImpl implements IdGenerateService, InitializingBea
                 LOGGER.info("开始异步刷新本地无序id段");
                 THREAD_POOL_EXECUTOR.execute(() -> {
                     try {
-                        IdGeneratePO idGeneratePO = idGenerateMapper.selectById(localUnSeqIdBO.getId());
-                        tryUpdateIdGenerate(idGeneratePO);
+                        updateIdGenerate(localUnSeqIdBO.getId());
                     } catch (Exception e) {
                         LOGGER.error("[refreshLocalUnSeqId] error is ", e);
                     } finally {
@@ -192,9 +190,9 @@ public class IdGenerateServiceImpl implements IdGenerateService, InitializingBea
     /**
      * 尝试占用DB中当前id段，并更新至本地内存Map
      */
-    private void tryUpdateIdGenerate(IdGeneratePO idGeneratePO) {
+    private void updateIdGenerate(Integer idGenerateId) {
         // 尝试占用DB中当前id段，并更新其为下一id段，避免和其他机器使用同一id段
-        idGeneratePO = tryUpdateIdGenerateInDB(idGeneratePO);
+        IdGeneratePO idGeneratePO = tryUpdateIdGenerate(idGenerateId);
         // 将该id段存入本地内存Map
         if (idGeneratePO.getIsSeq() == SEQ_ID) {
             // 有序id，直接将该id段存入本地内存Map
@@ -220,21 +218,17 @@ public class IdGenerateServiceImpl implements IdGenerateService, InitializingBea
      * 尝试占用DB中当前id段，并更新DB为下一id段
      * 同步执行，需要较多IO操作
      */
-    private IdGeneratePO tryUpdateIdGenerateInDB(IdGeneratePO idGeneratePO) {
-        int updateResult = idGenerateMapper.updateCurrentStartById(idGeneratePO.getId(), idGeneratePO.getVersion());
-        if (updateResult > 0) {
-            return idGeneratePO;
-        }
+    private IdGeneratePO tryUpdateIdGenerate(Integer idGenerateId) {
         // 若占用失败，则最多重试3次
-        for (int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 4; ++i) {
             // 获取最新版本的idGenerate信息
-            idGeneratePO = idGenerateMapper.selectById(idGeneratePO.getId());
+            IdGeneratePO idGeneratePO = idGenerateMapper.selectById(idGenerateId);
             // 尝试占用最新id段，若失败则表示此时有另一机器刚刚占用了该id段
-            updateResult = idGenerateMapper.updateCurrentStartById(idGeneratePO.getId(), idGeneratePO.getVersion());
+            int updateResult = idGenerateMapper.updateCurrentStartById(idGeneratePO.getId(), idGeneratePO.getVersion());
             if (updateResult > 0) {
                 return idGeneratePO;
             }
         }
-        throw new RuntimeException("[tryUpdateIdGenerateInDB] id段占用失败，id is " + idGeneratePO.getId());
+        throw new RuntimeException("[tryUpdateIdGenerateInDB] id段占用失败，id is " + idGenerateId);
     }
 }
