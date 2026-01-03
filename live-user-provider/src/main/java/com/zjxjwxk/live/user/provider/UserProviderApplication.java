@@ -38,7 +38,7 @@ public class UserProviderApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        long userId = 10001L;
+        long userId = 10001L;
 
 //        // 测试设置标签
 //        System.out.println("======开始设置标签======");
@@ -68,7 +68,7 @@ public class UserProviderApplication implements CommandLineRunner {
 
 //        // 测试并发设置标签
 //        CountDownLatch countDownLatch = new CountDownLatch(1);
-//        for (int i = 0; i < 100; ++i) {
+//        for (int i = 0; i < 50; ++i) {
 //            Thread thread = new Thread(() -> {
 //                try {
 //                    countDownLatch.await();
