@@ -77,22 +77,24 @@ public class UserTagServiceImpl implements IUserTagService {
             return false;
         }
 
-        // 2. 失败场景一：已经存在该标签记录，则表示该标签已设置，直接返回
-        UserTagPO userTagPO = userTagMapper.selectById(userId);
-        if (userTagPO != null) {
-            return false;
+        try {
+            // 2. 失败场景一：已经存在该标签记录，则表示该标签已设置，直接返回
+            UserTagPO userTagPO = userTagMapper.selectById(userId);
+            if (userTagPO != null) {
+                return false;
+            }
+
+            // 3. 失败场景二：不存在该标签记录，则插入标签记录并设置该标签
+            userTagPO = UserTagPO.builder().userId(userId).build();
+            userTagMapper.insert(userTagPO);
+            updateStatus = userTagMapper.setTag(userId, userTagsEnum.getFieldName(), userTagsEnum.getTag()) > 0;
+            LOGGER.info("插入用户标签记录，并设置标签成功");
+
+            return updateStatus;
+        } finally {
+            // 释放Redis分布式锁
+            redisTemplate.delete(setNxKey);
         }
-
-        // 3. 失败场景二：不存在该标签记录，则插入标签记录并设置该标签
-        userTagPO = UserTagPO.builder().userId(userId).build();
-        userTagMapper.insert(userTagPO);
-        updateStatus = userTagMapper.setTag(userId, userTagsEnum.getFieldName(), userTagsEnum.getTag()) > 0;
-        LOGGER.info("插入用户标签记录，并设置标签成功");
-
-        // 释放Redis分布式锁
-        redisTemplate.delete(setNxKey);
-
-        return updateStatus;
     }
 
     @Override
