@@ -3,6 +3,6 @@ dubbo:
     name: live-api
     qos-enable: false
   registry:
-    address: nacos://127.0.0.1:8848?username=nacos&&password=nacos
+    address: nacos://live.zjxjwxk.com:8848?username=nacos&&password=nacos
   protocol:
     name: dubbo

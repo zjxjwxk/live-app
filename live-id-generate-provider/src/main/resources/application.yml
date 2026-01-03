@@ -4,14 +4,14 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     #访问主库
-    url: jdbc:mysql://127.0.0.1:8808/live_common?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://live.zjxjwxk.com/live_common?useUnicode=true&characterEncoding=utf8
     username: root
     password: 19981018
 dubbo:
   application:
     name: ${spring.application.name}
   registry:
-    address: nacos://127.0.0.1:8848?username=nacos&&password=nacos
+    address: nacos://live.zjxjwxk.com:8848?username=nacos&&password=nacos
   protocol:
     name: dubbo
     port: 9098
