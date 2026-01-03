@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserRpcImplTest {
 
-    private static final String REGISTER_ADDRESS = "nacos://127.0.0.1:8848?username=nacos&&password=nacos";
+    private static final String REGISTER_ADDRESS = "nacos://live.zjxjwxk.com:8848?username=nacos&&password=nacos";
     private static RegistryConfig registryConfig;
     private static ApplicationConfig applicationConfig;
     private static IUserRpc userRpc;
