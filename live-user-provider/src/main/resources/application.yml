@@ -43,3 +43,6 @@ rocketmq:
   consumer:
     name-srv-addr: live.zjxjwxk.com:9876
     group-name: ${spring.application.name}
+
+logging:
+  config: classpath:logback-spring.xml
