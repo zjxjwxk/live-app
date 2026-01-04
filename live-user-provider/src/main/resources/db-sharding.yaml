@@ -2,14 +2,14 @@ dataSources:
   user_master:
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://live.zjxjwxk.com:8808/live_user?useUnicode=true&characterEncoding=utf8
+    jdbcUrl: jdbc:mysql://live.zjxjwxk.com:8808/live_user?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
     username: root
     password: 19981018
 
   user_slave0:
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://live.zjxjwxk.com:8809/live_user?useUnicode=true&characterEncoding=utf8
+    jdbcUrl: jdbc:mysql://live.zjxjwxk.com:8809/live_user?useUnicode=true&characterEncoding=utf8&allowPublicKeyRetrieval=true
     username: root
     password: 19981018
 
