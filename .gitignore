@@ -38,3 +38,4 @@ build/
 scripts/logs
 scripts/*.log
 scripts/*.out
+scripts/broker.conf
