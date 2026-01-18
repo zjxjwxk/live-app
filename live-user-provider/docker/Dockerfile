@@ -1,5 +1,6 @@
 FROM openjdk:17-jdk-alpine
 VOLUME /tmp
+COPY /arthas-bin.zip /opts/arthas-bin.zip
 ADD live-user-provider-docker.jar app.jar
 ENV JAVA_OPTS="\
 -server \
