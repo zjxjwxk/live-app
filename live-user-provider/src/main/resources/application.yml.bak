@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: live-user-provider
+  datasource:
+    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+#    url: jdbc:shardingsphere:classpath:db-sharding.yaml
+    url: jdbc:shardingsphere:nacos:live.zjxjwxk.com:8848:live-user-shardingjdbc.yaml?username=nacos&&password=nacos
+    hikari:
+      pool-name: live-user-pool
+      minimum-idle: 150
+      maximum-pool-size: 300
+      connection-timeout: 4000
+      max-lifetime: 60000
+  data:
+    redis:
+      port: 6379
+      host: live.zjxjwxk.com
+      lettuce:
+        pool:
+          min-idle: 10
+          max-idle: 20
+          max-active: 50
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+  registry:
+    address: nacos://live.zjxjwxk.com:8848?username=nacos&&password=nacos
+  protocol:
+    name: dubbo
+    port: 9090
+
+rocketmq:
+  producer:
+    name-srv-addr: live.zjxjwxk.com:9876
+    group-name: ${spring.application.name}
+    retry-times: 3
+    send-timeout: 3000
+  consumer:
+    name-srv-addr: live.zjxjwxk.com:9876
+    group-name: ${spring.application.name}
+
+logging:
+  config: classpath:logback-spring.xml
