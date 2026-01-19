@@ -5,3 +5,13 @@ spring:
       password: nacos
       discovery:
         server-addr: live.zjxjwxk.com:8848
+      config:
+        import-check:
+          enabled: false
+        # 当前服务启动后去 nacos 中读取配置文件的后缀
+        file-extension: yaml
+        # 读取配置的 nacos地址
+        server-addr: live.zjxjwxk.com:8848
+  config:
+    import:
+      - optional:nacos:live-user-provider.yaml
