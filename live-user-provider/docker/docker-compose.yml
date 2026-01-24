@@ -1,0 +1,30 @@
+version: '3'
+services:
+  live-user-provider-docker-1:
+    container_name: live-user-provider-docker-1
+    image: 'zjxjwxk/live-user-provider-docker:latest'
+    ports:
+      - "9091:9091"
+    volumes:
+      - /tmp/logs/live-user-provider:/tmp/logs/live-user-provider
+    environment:
+      - DUBBO_IP_TO_REGISTRY=$HOST_IP
+      - DUBBO_PORT_TO_REGISTRY=9091
+      - DUBBO_PORT_TO_BIND=9091
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
+    extra_hosts:
+      - 'live.zjxjwxk.com:$HOST_IP'
+  live-user-provider-docker-2:
+    container_name: live-user-provider-docker-2
+    image: 'zjxjwxk/live-user-provider-docker:latest'
+    ports:
+      - "9092:9092"
+    volumes:
+      - /tmp/logs/live-user-provider:/tmp/logs/live-user-provider
+    environment:
+      - DUBBO_IP_TO_REGISTRY=$HOST_IP
+      - DUBBO_PORT_TO_REGISTRY=9092
+      - DUBBO_PORT_TO_BIND=9092
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
+    extra_hosts:
+      - 'live.zjxjwxk.com:$HOST_IP'

@@ -1,0 +1,26 @@
+version: '3'
+services:
+  live-api-docker-1:
+    container_name: live-api-docker-1
+    image: 'zjxjwxk/live-api-docker:latest'
+    ports:
+      - "8080:8080"
+    volumes:
+      - /tmp/logs/live-api:/tmp/logs/live-api
+    environment:
+      - server.port=8080
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
+    extra_hosts:
+      - 'live.zjxjwxk.com:$HOST_IP'
+  live-api-docker-2:
+    container_name: live-api-docker-2
+    image: 'zjxjwxk/live-api-docker:latest'
+    ports:
+      - "8081:8081"
+    volumes:
+      - /tmp/logs/live-api:/tmp/logs/live-api
+    environment:
+      - server.port=8081
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
+    extra_hosts:
+      - 'live.zjxjwxk.com:$HOST_IP'
