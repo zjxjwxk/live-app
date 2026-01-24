@@ -1,8 +1,14 @@
-dubbo:
+spring:
   application:
     name: live-api
+
+dubbo:
+  application:
+    name: ${spring.application.name}
     qos-enable: false
   registry:
     address: nacos://live.zjxjwxk.com:8848?username=nacos&&password=nacos
-  protocol:
-    name: dubbo
+
+server:
+  servlet:
+    context-path: /live/api
