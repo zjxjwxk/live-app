@@ -8,6 +8,8 @@ services:
     volumes:
       - /tmp/logs/live-api:/tmp/logs/live-api
     environment:
+      - TZ=Asia/Shanghai
+      - spring.cloud.nacos.discovery.ip=$HOST_IP
       - server.port=8080
       - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
     extra_hosts:
@@ -20,6 +22,8 @@ services:
     volumes:
       - /tmp/logs/live-api:/tmp/logs/live-api
     environment:
+      - TZ=Asia/Shanghai
+      - spring.cloud.nacos.discovery.ip=$HOST_IP
       - server.port=8081
       - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k
     extra_hosts:
