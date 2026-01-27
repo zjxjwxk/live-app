@@ -1,0 +1,11 @@
+version: '3'
+services:
+  live-gateway-docker:
+    container_name: live-gateway-docker
+    image: 'zjxjwxk/live-gateway-docker:latest'
+    ports:
+      - "80:80"
+    volumes:
+      - /tmp/logs/live-gateway:/tmp/logs/live-gateway
+    environment:
+      - JAVA_OPTS=-XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=128m -Xms512m -Xmx512m -Xmn128m -Xss256k

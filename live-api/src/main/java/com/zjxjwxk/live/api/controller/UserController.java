@@ -2,6 +2,7 @@ package com.zjxjwxk.live.api.controller;
 
 import com.zjxjwxk.live.user.dto.UserDTO;
 import com.zjxjwxk.live.user.interfaces.IUserRpc;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
     @DubboReference
@@ -24,7 +26,9 @@ public class UserController {
 
     @GetMapping("/getUserInfo")
     public UserDTO getUserInfo(Long userId) {
-        return userRpc.getByUserId(userId);
+        UserDTO userDTO = userRpc.getByUserId(userId);
+        log.info("getUserInfo return UserDTO: {}", userDTO);
+        return userDTO;
     }
 
     @GetMapping("/batchQueryUserInfo")
